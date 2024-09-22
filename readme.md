@@ -16,7 +16,7 @@ Developers: `@wiz64`, `@jashvakharia`
 - ⭕ All basic features of a music player
 - :green_apple: Download MP3 Songs with metadata
 - 🏠 Modern Design
-- 📱 Simplified Design for Mobile Devices
+- ~~📱 Simplified Design for Mobile Devices~~
 - ♻ No ads, Open-Source, Optimised Code
 - 🎵 Large Library of Songs, Fetched Directly
   
