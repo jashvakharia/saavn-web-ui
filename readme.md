@@ -4,15 +4,14 @@
  
 ---
 
-## Live Preview
-Preview is available at the links below : <br>
-[saavn-web-ui.vercel.app](https://saavn-web-ui.vercel.app/)<br>
-[saavn.codeforkers.tk](https://saavn.codeforkers.tk)
+## Live
+
+Live preview of the site is [here](https://saavn-web-ui.onrender.com/).
 
 ## Details
 > Status : `In Development`<br>
 Version : `v3.0` <br>
-Developers: `@wiz64`
+Developers: `@wiz64`, `@jashvakharia`
 ## Features
 - ⭕ All basic features of a music player
 - :green_apple: Download MP3 Songs with metadata
@@ -34,16 +33,14 @@ Downloader API is available at [wiz64/saadhna-mp3-server](https://github.com/wiz
 <br>
 
 ## Deployment
-This can be deployed to any Web Hosting Service, Platforms like Vercel, Heroku, Replit, Github Pages or through applications like PHP, NodeJS (express.js) or Python(Flask)
+This project can be deployed using  Vercel, Render, Heroku, Replit, Github Pages or through applications like PHP, NodeJS (express.js) or Python(Flask)
 
 > Just anything that can serve plain HTML will work
 
 <br>
 
 ## Copyright & Credits
-> Developed by [@wiz64](https://github.com/wiz64) featuring API made by [@sumitkolhe](https://github/sumitkolhe) .
-
-XDA - Off Topic Group
+> Developed by [@wiz64](https://github.com/wiz64) & [@jashvakharia](https://github.com/jashvakharia) featuring API made by [@sumitkolhe](https://github/sumitkolhe) .
 
 This code was licensed under MIT License. View [LICENSE FILE](./LICENSE)
 > &copy;  Copyright 2022 @wiz64
