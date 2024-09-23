@@ -6,7 +6,7 @@
 
 ## Live
 
-Live preview of the site is [here](https://saavn-web-ui.onrender.com/).
+Live preview of the site is [here](https://mpstme-song-player-jash.onrender.com/).
 
 ## Details
 > Status : `In Development`<br>
