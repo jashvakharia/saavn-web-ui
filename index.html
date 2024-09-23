@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>MPSTME Music Player - SAAVN Music API</title>
+    <title>Music Player - Jash Vakharia</title>
     <meta name="description" content="Ad-free Music Player made by Jash Vakharia.">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -21,6 +21,52 @@
         }
         nav {
             background-color: #1e1e1e;
+        }
+        .seek-overlay {
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        pointer-events: none;
+        }
+    .image-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #timeDisplay {
+            font-size: 10px; /* You can adjust the size as needed */
+        }
+
+        .image-popup.fade-in {
+            opacity: 1;
+        }
+
+        .image-popup.fade-out {
+            opacity: 0;
+        }
+
+        .image-popup img {
+            max-width: 100%;
+            max-height: 70vh;
+            margin-bottom: 10px;
+        }
+
+        .image-popup p {
+            color: #ffffff;
+            font-size: 18px;
         }
         nav .btn-floating {
             margin-left: 15px;
@@ -126,7 +172,7 @@
 <body>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">MPSTME Music Player - SAAVN Music API</a>
+            <a href="#" class="brand-logo">SVKM Music Player - SAAVN Music API  ( By Jash Vakharia )</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="https://www.linkedin.com/in/jash-vakharia-22465831b" target="_blank">Jash Vakharia</a></li>
                 <li><a id="mpopupLink" class="btn-floating btn-small waves-effect waves-light">
@@ -163,7 +209,7 @@
             </div>
 
             <div id="saavn-results">
-                <!-- Results will be dynamically added here -->
+                
             </div>
 
             <div class="center-align">
@@ -191,11 +237,14 @@
                     </div>
                     <i class="material-icons" id="volumeIcon">volume_up</i>
                 </div>
+                <div id="timeDisplay" class="center-align">0:00 / 0:00</div>
+                <div id="seekOverlay" class="seek-overlay" style="display: none;">0:00</div>
                 <audio id="player" style="display: none;">
                     <source id="audioSource" src="">
                     Your browser does not support the audio format.
                 </audio>
             </div>
+            
         </div>
     </div>
 
@@ -205,7 +254,7 @@
         <div class="modal-content">
             <h4>Downloads</h4>
             <ul id="download-list" class="collection">
-                <!-- Download items will be dynamically added here -->
+                
             </ul>
         </div>
         <div class="modal-footer">
@@ -219,53 +268,135 @@
         <p>Originally by wiz64 for API. Re-Designed by Jash Vakharia.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="assets/js/functions.js"></script>
-    <script src="assets/js/saavn-search.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-         M.toast({
-                html: 'The download icon on the top right corner is the Download Status section.',
-                displayLength: 2000,
-                classes: 'rounded'
-                });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems);
-
-            // Custom audio player controls
-            const audio = document.getElementById('player');
-            const playPauseBtn = document.getElementById('playPause');
-            const progressBar = document.querySelector('.progress .determinate');
-            const volumeIcon = document.getElementById('volumeIcon');
-
-            playPauseBtn.addEventListener('click', () => {
-                if (audio.paused) {
-                    audio.play();
-                    playPauseBtn.textContent = 'pause';
-                } else {
-                    audio.pause();
-                    playPauseBtn.textContent = 'play_arrow';
-                }
-            });
-
-            audio.addEventListener('timeupdate', () => {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-            });
-
-            volumeIcon.addEventListener('click', () => {
-                audio.muted = !audio.muted;
-                volumeIcon.textContent = audio.muted ? 'volume_off' : 'volume_up';
-            });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="assets/js/functions.js"></script>
+<script src="assets/js/saavn-search.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        M.toast({
+            html: 'The download icon on the top right corner is the Download Status section.',
+            displayLength: 4000,
+            classes: 'rounded'
         });
 
-        document.getElementById('mpopupLink').addEventListener('click', function() {
-            var elem = document.getElementById('mpopupBox');
-            var instance = M.Modal.getInstance(elem);
-            instance.open();
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+
+        const audio = document.getElementById('player');
+        const playPauseBtn = document.getElementById('playPause');
+        const progressBar = document.querySelector('.progress .determinate');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const progressContainer = document.querySelector('.progress');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const seekOverlay = document.getElementById('seekOverlay');
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+
+        audio.addEventListener('play', updatePlayPauseIcon);
+        audio.addEventListener('pause', updatePlayPauseIcon);
+
+        audio.addEventListener('timeupdate', updateTimeAndProgress);
+        audio.addEventListener('loadedmetadata', updateTimeAndProgress);
+
+        volumeIcon.addEventListener('click', () => {
+            audio.muted = !audio.muted;
+            volumeIcon.textContent = audio.muted ? 'volume_off' : 'volume_up';
         });
-    </script>
+
+        progressContainer.addEventListener('click', seek);
+        progressContainer.addEventListener('mousemove', showSeekOverlay);
+        progressContainer.addEventListener('mouseleave', hideSeekOverlay);
+
+        function togglePlayPause() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        function updatePlayPauseIcon() {
+            playPauseBtn.textContent = audio.paused ? 'play_arrow' : 'pause';
+        }
+
+        function updateTimeAndProgress() {
+            const currentTime = formatTime(audio.currentTime);
+            const duration = formatTime(audio.duration);
+            timeDisplay.textContent = `${currentTime} / ${duration}`;
+
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function seek(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        }
+
+        function showSeekOverlay(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            const seekTime = pos * audio.duration;
+
+            seekOverlay.textContent = formatTime(seekTime);
+            seekOverlay.style.display = 'block';
+            seekOverlay.style.left = `${e.clientX}px`;
+            seekOverlay.style.top = `${rect.top - 30}px`;
+        }
+
+        function hideSeekOverlay() {
+            seekOverlay.style.display = 'none';
+        }
+    });
+
+    document.getElementById('mpopupLink').addEventListener('click', function() {
+        var elem = document.getElementById('mpopupBox');
+        var instance = M.Modal.getInstance(elem);
+        instance.open();
+    });
+
+    function showImagePopup(imagePath, text) {
+        const popup = document.getElementById('imagePopup');
+        const popupImage = document.getElementById('popupImage');
+        const popupText = document.getElementById('popupText');
+
+        popupImage.src = imagePath;
+        popupText.innerHTML = text;
+
+        popup.style.display = 'block';
+        
+        popup.offsetHeight;
+
+        popup.classList.add('fade-in');
+
+        setTimeout(() => {
+            popup.classList.remove('fade-in');
+            popup.classList.add('fade-out');
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+                popup.classList.remove('fade-out');
+            }, 500);
+        }, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        showImagePopup('assets/images/541193.jpg', 'Through chaos as it swirls,<br>It\'s us against the world.<br>~ ColdPlay.');
+    });
+</script>
+
+
+    <div id="imagePopup" class="image-popup">
+        <img id="popupImage" src="" alt="ColdPlay">
+        <p id="popupText"></p>
+    </div>
+    
 </body>
 </html>
