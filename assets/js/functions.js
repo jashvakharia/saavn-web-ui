@@ -1,30 +1,55 @@
 function PlayAudio(audio_url, song_id) {
-    
-  var audio = document.getElementById('player');
-  var source = document.getElementById('audioSource');
-  source.src = audio_url;
-  var name = document.getElementById(song_id+"-n").textContent;
-  var album = document.getElementById(song_id+"-a").textContent;
-  var image = document.getElementById(song_id+"-i").getAttribute("src");
-    
-document.title = name+" - "+album;
-var bitrate = document.getElementById('saavn-bitrate');
-var bitrate_i = bitrate.options[bitrate.selectedIndex].value;
-var quality = "";
-if (bitrate_i == 4) {quality = 320} else {quality = 160;}
-
-
+    var audio = document.getElementById('player');
+    var source = document.getElementById('audioSource');
+    source.src = audio_url;
+    var name = document.getElementById(song_id+"-n").textContent;
+    var album = document.getElementById(song_id+"-a").textContent;
+    var image = document.getElementById(song_id+"-i").getAttribute("src");
+     
+    document.title = name+" - "+album;
+    var bitrate = document.getElementById('saavn-bitrate');
+    var bitrate_i = bitrate.options[bitrate.selectedIndex].value;
+    var quality = "";
+    if (bitrate_i == 4) {quality = 320} else {quality = 160;}
+  
     document.getElementById("player-name").innerHTML = name;
-        document.getElementById("player-album").innerHTML = album;
-document.getElementById("player-image").setAttribute("src",image);
-
-var promise = audio.load();
-if (promise) {
-    //Older browsers may not return a promise, according to the MDN website
-    promise.catch(function(error) { console.error(error); });
-}//call this to just preload the audio without playing
-  audio.play(); //call this to play the song right away
-};
+    document.getElementById("player-album").innerHTML = album;
+    document.getElementById("player-image").setAttribute("src",image);
+  
+    var promise = audio.load();
+    if (promise) {
+      promise.catch(function(error) { console.error(error); });
+    }
+    audio.play();
+  
+    // Add looping functionality
+    var loopButton = document.getElementById('loopButton');
+    var isLooping = false;
+  
+    loopButton.addEventListener('click', toggleLoop);
+  
+    function toggleLoop() {
+      isLooping = !isLooping;
+      audio.loop = isLooping;
+      updateLoopButtonState();
+    }
+  
+    function updateLoopButtonState() {
+      loopButton.textContent = isLooping ? 'repeat_one' : 'repeat';
+      loopButton.style.color = isLooping ? '#bb86fc' : '';
+    }
+  
+    audio.addEventListener('ended', function() {
+      if (isLooping) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    });
+  
+    // Set initial loop button state
+    updateLoopButtonState();
+  };
+  
 function searchSong(search_term) {
     
 document.getElementById('search-box').value=search_term;

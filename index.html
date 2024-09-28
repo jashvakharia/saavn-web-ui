@@ -73,6 +73,11 @@
             margin-right: 15px;
             background-color: #bb86fc;
         }
+        .custom-audio-player #loopButton {
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: 10px;
+}
         nav .btn-floating:hover {
             background-color: #a370d8;
         }
@@ -236,7 +241,9 @@
                         <div class="determinate" style="width: 0%"></div>
                     </div>
                     <i class="material-icons" id="volumeIcon">volume_up</i>
+                    <i class="material-icons" id="loopButton">repeat</i>
                 </div>
+                
                 <div id="timeDisplay" class="center-align">0:00 / 0:00</div>
                 <div id="seekOverlay" class="seek-overlay" style="display: none;">0:00</div>
                 <audio id="player" style="display: none;">
@@ -390,6 +397,33 @@
     document.addEventListener('DOMContentLoaded', function() {
         showImagePopup('assets/images/541193.jpg', 'Through chaos as it swirls,<br>It\'s us against the world.<br>~ ColdPlay.');
     });
+
+    const loopButton = document.getElementById('loopButton');
+let isLooping = false;
+
+loopButton.addEventListener('click', toggleLoop);
+
+function toggleLoop() {
+    isLooping = !isLooping;
+    audio.loop = isLooping;
+    updateLoopButtonState();
+}
+
+function updateLoopButtonState() {
+    loopButton.textContent = isLooping ? 'repeat_one' : 'repeat';
+    loopButton.style.color = isLooping ? '#bb86fc' : '';
+}
+
+audio.addEventListener('ended', function() {
+    if (isLooping) {
+        audio.currentTime = 0;
+        audio.play();
+    }
+});
+
+// Call this function to set the initial state
+updateLoopButtonState();
+
 </script>
 
 
