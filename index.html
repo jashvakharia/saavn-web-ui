@@ -328,6 +328,18 @@
             playPauseBtn.textContent = audio.paused ? 'play_arrow' : 'pause';
         }
 
+	document.addEventListener('keydown', function(event) {
+    	if (event.code === 'Space') {
+        	event.preventDefault();
+        	if (audio.paused) {
+            	audio.play();
+        } else {
+            	audio.pause();
+        }
+        updatePlayPauseIcon();
+    	}
+	});
+
         function updateTimeAndProgress() {
             const currentTime = formatTime(audio.currentTime);
             const duration = formatTime(audio.duration);
