@@ -329,16 +329,17 @@
         }
 
 	document.addEventListener('keydown', function(event) {
-    	if (event.code === 'Space') {
-        	event.preventDefault();
-        	if (audio.paused) {
-            	audio.play();
-        } else {
-            	audio.pause();
+            const activeElement = document.activeElement;
+            if (event.code === 'Space' && activeElement.tagName !== 'INPUT' && activeElement.tagName !== 'TEXTAREA') {
+            event.preventDefault();
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+            updatePlayPauseIcon();
         }
-        updatePlayPauseIcon();
-    	}
-	});
+    });
 
         function updateTimeAndProgress() {
             const currentTime = formatTime(audio.currentTime);
