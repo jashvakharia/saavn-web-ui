@@ -47,7 +47,7 @@
             transition: opacity 0.5s ease-in-out;
         }
         #timeDisplay {
-            font-size: 10px; /* You can adjust the size as needed */
+            font-size: 10px;
         }
 
         .image-popup.fade-in {
@@ -74,10 +74,10 @@
             background-color: #bb86fc;
         }
         .custom-audio-player #loopButton {
-    cursor: pointer;
-    font-size: 24px;
-    margin-left: 10px;
-}
+            cursor: pointer;
+            font-size: 24px;
+            margin-left: 10px;
+        }
         nav .btn-floating:hover {
             background-color: #a370d8;
         }
@@ -174,6 +174,16 @@
             background-color: #2e2e2e !important;
             color: #ffffff !important;
         }
+        .song-btn {
+            padding: 0 8px;
+            height: 24px;
+            line-height: 24px;
+            font-size: 12px;
+        }
+        #queueIcon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -238,12 +248,14 @@
             </div>
             <div class="col s3 player-controls">
                 <div class="custom-audio-player">
+                    <i class="material-icons" id="nextSong">skip_next</i>
                     <i class="material-icons" id="playPause">play_arrow</i>
                     <div class="progress">
                         <div class="determinate" style="width: 0%"></div>
                     </div>
                     <i class="material-icons" id="volumeIcon">volume_up</i>
                     <i class="material-icons" id="loopButton">repeat</i>
+                    <i class="material-icons modal-trigger" href="#queueModal" id="queueIcon">queue_music</i>
                 </div>
                 
                 <div id="timeDisplay" class="center-align">0:00 / 0:00</div>
@@ -257,8 +269,6 @@
         </div>
     </div>
 
-    
-
     <div id="mpopupBox" class="modal">
         <div class="modal-content">
             <h4>Downloads</h4>
@@ -268,6 +278,17 @@
         </div>
         <div class="modal-footer">
             <p>If you rate limit me, the site will have to go down!</p>
+        </div>
+    </div>
+
+    <div id="queueModal" class="modal">
+        <div class="modal-content">
+            <h4>Queue</h4>
+            <ul id="queueList" class="collection">
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
 
@@ -287,6 +308,9 @@
             displayLength: 4000,
             classes: 'rounded'
         });
+
+        const nextSongBtn = document.getElementById('nextSong');
+        nextSongBtn.addEventListener('click', playNextInQueue);
 
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems);
@@ -328,7 +352,7 @@
             playPauseBtn.textContent = audio.paused ? 'play_arrow' : 'pause';
         }
 
-	document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function(event) {
             const activeElement = document.activeElement;
             if (event.code === 'Space' && activeElement.tagName !== 'INPUT' && activeElement.tagName !== 'TEXTAREA') {
             event.preventDefault();
@@ -340,6 +364,7 @@
             updatePlayPauseIcon();
         }
     });
+
 
         function updateTimeAndProgress() {
             const currentTime = formatTime(audio.currentTime);
@@ -376,6 +401,11 @@
         function hideSeekOverlay() {
             seekOverlay.style.display = 'none';
         }
+
+        var queueModal = document.querySelector('#queueModal');
+        M.Modal.init(queueModal);
+
+        document.getElementById('queueIcon').addEventListener('click', updateQueueDisplay);
     });
 
     document.getElementById('mpopupLink').addEventListener('click', function() {
@@ -414,30 +444,33 @@
     });
 
     const loopButton = document.getElementById('loopButton');
-let isLooping = false;
+    let isLooping = false;
 
-loopButton.addEventListener('click', toggleLoop);
+    loopButton.addEventListener('click', toggleLoop);
 
-function toggleLoop() {
-    isLooping = !isLooping;
-    audio.loop = isLooping;
-    updateLoopButtonState();
-}
-
-function updateLoopButtonState() {
-    loopButton.textContent = isLooping ? 'repeat_one' : 'repeat';
-    loopButton.style.color = isLooping ? '#bb86fc' : '';
-}
-
-audio.addEventListener('ended', function() {
-    if (isLooping) {
-        audio.currentTime = 0;
-        audio.play();
+    function toggleLoop() {
+        isLooping = !isLooping;
+        audio.loop = isLooping;
+        updateLoopButtonState();
     }
-});
 
-// Call this function to set the initial state
-updateLoopButtonState();
+    function updateLoopButtonState() {
+        loopButton.textContent = isLooping ? 'repeat_one' : 'repeat';
+        loopButton.style.color = isLooping ? '#bb86fc' : '';
+    }
+
+    audio.addEventListener('ended', function() {
+        if (isLooping) {
+            audio.currentTime = 0;
+            audio.play();
+        }
+    });
+
+    // Call this function to set the initial state
+    updateLoopButtonState();
+
+    
+
 
 </script>
 
